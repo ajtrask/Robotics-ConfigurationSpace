@@ -1,0 +1,56 @@
+function flag = triangle_intersection(P1, P2)
+% triangle_test : returns true if the triangles overlap and false otherwise
+
+%%% All of your code should be between the two lines of stars.
+% *******************************************************************
+
+flag = false;
+
+% Check if any verticies of P1 are in P2
+for i=1:3
+    if point_inside_triangle(P1(i,:),P2)
+        flag = true;
+        return
+    end
+end
+
+% Check if any verticies of P2 are in P1
+for i=1:3
+    if point_inside_triangle(P2(i,:),P1)
+        flag = true;
+        return
+    end
+end
+
+
+% *******************************************************************
+end
+
+%function to determine if point is inside a triangle
+function val = point_inside_triangle(point, triangle)
+    % Choose first vertex of triangle as origin
+    % Construct vectors for triangle edges that make this vertex
+    vec_AC = triangle(3,:) - triangle(1,:);
+    vec_AB = triangle(2,:) - triangle(1,:);
+    % Construct the vector to the point
+    vec_AP = point - triangle(1,:);
+
+    % Compute dot products
+    dotACAC = dot(vec_AC, vec_AC);
+    dotACAB = dot(vec_AC, vec_AB);
+    dotACAP = dot(vec_AC, vec_AP);
+    dotABAB = dot(vec_AB, vec_AB);
+    dotABAP = dot(vec_AB, vec_AP);
+
+    % Compute barycentric coordinates
+    denom = dotACAC * dotABAB - dotACAB * dotACAB;
+    u = (dotABAB * dotACAP - dotACAB * dotABAP) / denom;
+    v = (dotACAC * dotABAP - dotACAB * dotACAP) / denom;
+
+    % Check if point is in triangle
+    if (u >= 0 && v >= 0 && u + v < 1)
+        val = true;
+    else
+        val = false;
+    end
+end
